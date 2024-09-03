@@ -21,25 +21,21 @@ export default function HomePage() {
             return;
           }
           setInput('');
-          setMessages(prev => [
-            ...prev,
+          const newMessages = [
+            ...messages,
             {
               id: crypto.randomUUID(),
               role: 'user',
               content: input,
             },
-          ]);
-          const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          ];
+          setMessages(newMessages);
+          const response = await fetch('/api/chat', {
             method: 'POST',
             headers: {
-              Authorization: `Bearer ${process.env.NEXT_PUBLIC_OPENROUTER_API_KEY}`,
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-              model: 'google/gemma-2-9b-it:free',
-              messages: [{ role: 'user', content: input }],
-              stream: true,
-            }),
+            body: JSON.stringify({ messages: newMessages }),
           });
           const reader = response.body.getReader();
           const decoder = new TextDecoder('utf-8');
