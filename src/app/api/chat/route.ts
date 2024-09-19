@@ -1,5 +1,8 @@
+import { Message } from '~/types';
+
 export async function POST(req: Request) {
-  const { messages } = (await req.json()) as { messages: { id: string; role: string; content: string }[] };
+  const { messages } = (await req.json()) as { messages: Message[] };
+
   const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
     headers: {
@@ -12,5 +15,6 @@ export async function POST(req: Request) {
       stream: true,
     }),
   });
+
   return response;
 }
